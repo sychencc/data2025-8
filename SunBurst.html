@@ -1,0 +1,110 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+    path {
+      stroke: white;
+      stroke-width: 0.5;
+    }
+  </style>
+</head>
+<body>
+  <div id="chart"></div>
+
+<script>
+// 动态获取窗口尺寸
+let width = window.innerWidth,
+    height = window.innerHeight,
+    radius = Math.min(width, height) / 2;
+
+// 创建SVG容器
+const svg = d3.select("#chart")
+  .append("svg")
+  .attr("width", width)
+  .attr("height", height)
+  .append("g")
+  .attr("transform", `translate(${width/2},${height/2})`);
+
+// 窗口大小变化监听
+window.addEventListener("resize", () => {
+  width = window.innerWidth;
+  height = window.innerHeight;
+  radius = Math.min(width, height) / 2;
+  
+  d3.select("svg")
+    .attr("width", width)
+    .attr("height", height)
+    .select("g")
+    .attr("transform", `translate(${width/2},${height/2})`);
+  
+  drawSunburst(); // 重绘图表
+});
+
+// 定义分区布局
+const partition = d3.partition()
+  .size([2 * Math.PI, radius]);
+
+// 莫兰迪色系
+const morandiColors = [
+  "#8C8C8C", "#A6A6A6", "#BFA58F", 
+  "#D9B3A3", "#8CAFBF", "#BF8F8F",
+  "#A3BF8F", "#8FBFB3", "#BFA58F"
+];
+
+// 绘制函数封装
+function drawSunburst() {
+  d3.json("flare.json").then(data => {
+    const root = d3.hierarchy(data)
+      .sum(d => d.value)
+      .sort((a, b) => b.value - a.value);
+
+    partition(root);
+
+    const color = d3.scaleOrdinal()
+      .domain(d3.range(morandiColors.length))
+      .range(morandiColors);
+
+    const arc = d3.arc()
+      .startAngle(d => d.x0)
+      .endAngle(d => d.x1)
+      .innerRadius(d => d.y0)
+      .outerRadius(d => d.y1);
+
+    // 更新弧段
+    svg.selectAll("path")
+      .data(root.descendants())
+      .join("path")
+      .attr("d", arc)
+      .attr("fill", d => color(d.depth))
+      .attr("fill-opacity", 0.85);
+
+    // 更新文本标签
+    svg.selectAll("text")
+      .data(root.descendants().filter(d => d.depth > 0))
+      .join("text")
+      .attr("transform", d => `
+        rotate(${(d.x0 + d.x1)/2 * 180/Math.PI - 90})
+        translate(${(d.y0 + d.y1)/2},0)
+      `)
+      .attr("text-anchor", "middle")
+      .style("fill", "#5C5C5C")
+      .style("font-size", `${Math.min(14, radius/30)}px`) // 动态字体大小
+      .text(d => d.data.name);
+  });
+}
+
+// 初始绘制
+drawSunburst();
+</script>
+</body>
+</html>
