@@ -1,0 +1,131 @@
+<html>
+<head>
+    <title>电子签名</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700&family=Source+Han+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        }
+        
+        .signature-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            padding: 30px;
+            width: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .signature-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, #41bddf, #816ec8);
+        }
+        
+        .signature-container {
+            display: flex;
+            align-items: center;
+            padding: 20px 0;
+            position: relative;
+        }
+        
+        .tian-zi-ge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            height: 80px;
+            width: 80px;
+            background-color: rgba(65, 189, 223, 0.1);
+            border-radius: 8px;
+            border: 1px dashed rgba(65, 189, 223, 0.3);
+            padding: 5px;
+        }
+        
+        .tian-zi-ge span {
+            font-family: 'Source Han Serif SC', serif;
+            font-size: 24px;
+            color: #41bddf;
+            font-weight: 700;
+            line-height: 1.2;
+        }
+        
+        .name {
+            font-family: 'Source Han Serif SC', serif;
+            font-size: 52px;
+            font-weight: 700;
+            color: #816ec8;
+            margin-left: 20px;
+            letter-spacing: 2px;
+            text-shadow: 1px 1px 3px rgba(129, 110, 200, 0.2);
+            position: relative;
+        }
+        
+        .name::after {
+            content: "";
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, #41bddf, #816ec8);
+            border-radius: 2px;
+        }
+        
+        .signature-footer {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            font-family: 'Noto Sans SC', sans-serif;
+            color: #666;
+            font-size: 12px;
+        }
+        
+        .position {
+            font-weight: 700;
+            color: #555;
+        }
+        
+        .date {
+            opacity: 0.8;
+        }
+        
+        .watermark {
+            position: absolute;
+            right: 30px;
+            bottom: 20px;
+            font-family: 'Source Han Serif SC', serif;
+            font-size: 12px;
+            color: rgba(129, 110, 200, 0.15);
+            transform: rotate(-15deg);
+            user-select: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="signature-card">
+        <div class="signature-container">
+            <div class="tian-zi-ge">
+                <span>2 2</span>
+                <span>计传</span>
+            </div>
+            <div class="name">陈识宇</div>
+        </div>
+        
+        <div class="watermark">电子签名</div>
+    </div>
+</body>
+</html>
